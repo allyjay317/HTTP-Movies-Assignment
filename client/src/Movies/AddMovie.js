@@ -1,27 +1,15 @@
-import React, { useState, useEffect } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import Axios from 'axios'
 
-const UpdateMovie = (props) => {
-  const [movie, setMovie] = useState({})
-  const params = useParams()
+const AddMovie = (props) => {
+  const [movie, setMovie] = useState({ title: '', director: '', metascore: 0, stars: '' })
   const history = useHistory()
-  useEffect(() => {
-    Axios.get(`http://localhost:5001/api/movies/${params.id}`)
-      .then(res => {
-        console.log(res)
-        const newMovie = {
-          ...res.data,
-          stars: res.data.stars.reduce((acc = '', star) => `${acc}, ${star}`)
-        }
-        setMovie(newMovie)
-      })
-  }, [])
 
   const handleChange = e => {
     setMovie({
       ...movie,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.name === 'metascore' ? parseInt(e.target.value) : e.target.value
     })
   }
 
@@ -31,11 +19,12 @@ const UpdateMovie = (props) => {
       ...movie,
       stars: movie.stars.split(',').map(m => m.trim())
     }
-    Axios.put(`http://localhost:5001/api/movies/${params.id}`, newMovie)
+    Axios.post(`http://localhost:5001/api/movies/`, newMovie)
       .then(res => {
-        console.log(res)
-        props.setMovieList(props.movies.map(m => m.id === params.id ? newMovie : m))
-        history.goBack()
+        debugger
+        console.log([...props.movies, newMovie])
+        props.setMovieList(res.data)
+        history.push('/')
       })
   }
   return (
@@ -55,9 +44,9 @@ const UpdateMovie = (props) => {
         Stars
         <input label='stars' type='text' name='stars' value={movie.stars} onChange={handleChange} />
       </label>
-      <button onClick={handleSubmit}>Update</button>
+      <button onClick={handleSubmit}>Add</button>
     </form>
   )
 }
 
-export default UpdateMovie
+export default AddMovie
