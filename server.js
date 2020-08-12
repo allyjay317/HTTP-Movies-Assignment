@@ -103,10 +103,10 @@ app.delete("/api/movies/:id", (req, res) => {
   res.status(202).send(req.params.id);
 });
 
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
   res.send("App is working 👍");
 });
 
-app.listen(5000, () => {
-  console.log("Server listening on port 5000");
+app.listen(5001, () => {
+  console.log("Server listening on port 5001");
 });
