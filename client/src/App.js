@@ -21,6 +21,11 @@ const App = () => {
     setSavedList([...savedList, movie]);
   };
 
+  const deleteMovie = id => {
+    setMovieList(movieList.filter(m => m.id !== parseInt(id)))
+    setSavedList(savedList.filter(m => m.id !== parseInt(id)))
+  }
+
   useEffect(() => {
     getMovieList();
   }, []);
@@ -34,7 +39,7 @@ const App = () => {
       </Route>
 
       <Route path="/movies/:id">
-        <Movie addToSavedList={addToSavedList} />
+        <Movie addToSavedList={addToSavedList} deleteFromList={deleteMovie} />
       </Route>
       <Route path='/update-movie/:id'>
         <UpdateMovie movies={movieList} setMovieList={setMovieList} />
